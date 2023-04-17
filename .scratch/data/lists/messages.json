@@ -1,0 +1,8 @@
+{
+  "notImplemented": "This feature is not implemented yet.",
+  "confirmSave": "Are you sure you want to save?",
+  "confirmCancel": "Are you sure you want to cancel?",
+  "confirmDelete": "Are you sure you want to delete?",
+  "confirmAddField": "Are you sure you want to add this field?",
+  "deleteField": "Are you sure you want to delete the field %1",
+}

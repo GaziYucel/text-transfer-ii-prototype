@@ -1,0 +1,37 @@
+{
+    "metadata": {
+        "name": "TextTransfer (Pilot)",
+        "created": "2023-04-10",
+        "modified": "2023-04-10"
+    },
+    "fields": [
+        {
+            "key": "dc.title",
+            "type": "text",
+            "schema": "",
+            "definition": "Title of the resource",
+            "value": "TextTransfer (Pilot)"
+        },
+        {
+            "key": "dc.subtitle",
+            "type": "text",
+            "schema": "",
+            "definition": "Subtitle of the resource",
+            "value": "Korpusgest\u00fctzte Erkennung  von Verwertungsmustern  in wissenschaftlichen Texten"
+        },
+        {
+            "key": "dc.description.abstract",
+            "type": "richtext",
+            "schema": "",
+            "definition": "Abstract or summary.",
+            "value": "Die zentrale Aufgabenstellung des Verbundprojektes TextTransfer (Pilot) war eine Machbarkeitspr\u00fcfung f\u00fcr die Entwicklung eines Text-Mining-Verfahrens, mit dem Forschungsergebnisse automatisiert auf Hinweise zu Transfer- und Impactpotenzialen untersucht werden k\u00f6nnen. Das vom Projektkoordinator IDS verantwortete Teilprojekt konzentrierte sich dabei auf die Entwicklung der methodischen Grundlagen, w\u00e4hrend der Projektpartner TIB vornehmlich f\u00fcr die Bereitstellung eines geeigneten Datensatzes verantwortlich war. Solchen automatisierten Verfahren liegen zumeist textbasierte Daten als physisches Manifest wissenschaftlicher Erkenntnisse zugrunde, die im Falle von TextTransfer (Pilot) als empirische Grundlage herangezogen wurden. Das im Verbund zur Anwendung gebrachte maschinelle Lernverfahren st\u00fctzte sich ausschlie\u00dflich auf deutschsprachige Projektendberichte \u00f6ffentlich gef\u00f6rderter Forschung. Diese Textgattung eignet sich insbesondere hinsichtlich ihrer \u00f6ffentlichen Verf\u00fcgbarkeit bei zust\u00e4ndigen Ged\u00e4chtnisorganisationen und aufgrund ihrer im Vergleich zu anderen Formaten wissenschaftlicher Publikation relativen strukturellen wie sprachlichen Homogenit\u00e4t. TextTransfer (Pilot) ging daher grunds\u00e4tzlich von der Annahme struktureller bzw. sprachlicher \u00c4hnlichkeit in Berichtstexten aus, bei denen der Nachweis  tats\u00e4chlich erfolgten Transfers zu erbringen war. Im Folgenden wird in diesen F\u00e4llen von Texten bzw. textgebundenen Forschungsergebnissen mit Transfer- und Impactpotenzial gesprochen werden. Es wurde ferner postuliert, dass sich diese Indizien von sprachlichen Eigenschaften in Texten zu Projekten ohne nachzuweisenden bzw. ggf. auch niemals erfolgtem, aber potenziell m\u00f6glichem Transfer oder Impact unterscheiden lassen. Mit einer Verifizierung dieser Annahmen war es m\u00f6glich, Transfer- oder Impactwahrscheinlichkeiten in gro\u00dfen Mengen von Berichtsdaten ohne eingehende Lekt\u00fcre zu prognostizieren."
+        },
+        {
+            "key": "dc.body",
+            "type": "richtext",
+            "schema": "",
+            "definition": "Main body of the resource",
+            "value": "<h5>Project description<\/h5>\n<p><strong>Objective of the project and addressing the purpose of the grant<\/strong><\/p>\n<p>OPTIMETA extends the well-known publication platform for open access journals, OJS,\nwith citation and spatiotemporal data for each article and thus improves the OA ecosystem\non the metadata side. Two OJS plugins enable a large number of OJS-based OA journals\nto innovatively link publications via a significant improvement in metadata richness,\ndiversity and quality. This strengthens the perceived quality of the publications, significantly\nincreases their discoverability and thereby increases the attraction of small and\nindependent journals. Overall, the project will enable numerous small and independent OA\njournals to contribute to establishing OA as the standard of scientific publishing, to improve\nthe propagation of OA publications and to lead the way in innovative cooperations, based\non free and open source software and open data.<\/p>\n\n<p style=\"text-align: center;\">\n<img src=\"assets\/img\/logo.png\" alt=\"TextTransfer Logo\" style=\"height: 75px;\"\/>\n<\/p>\n\n<p><strong>Methodological approach to achieve the objective<\/strong><\/p>\n<p>Various methods are combined to achieve the project's objectives. A mixed-methods\napproach will be used for the needs analysis. Expert interviews with editors and operators\nof small and independent journals, as well as researchers, will be used to identify key\nrequirements for the design and features of OJS plugins. Later, a quantitative survey of\nthese stakeholders will be conducted to determine their needs and priorities regarding the\nenrichment of article metadata with citation and geodata. These needs will then be\nformulated in user stories, on the basis of which the initial conception and the\nimplementation of the two plugins will take place. In an iterative development process, a\nprototype will be made available to the community for testing and installation at selected\ncooperating partner journals*12 will be actively supported. The feedback received during\nwebinars and short surveys will flow back into the next iteration of conception and\ndevelopment. The development will take place in joint agile sprints of the partners. At the\nend of each sprint stands the release of a minimum viable product (MVP). The export of\nthe citation and spatiotemporal metadata to the respective target systems will then be\nimplemented in cooperation with the stakeholders. Dissemination and community outreach,\nfor example, on the project website (https:\/\/projects.tib.eu\/optimeta), project partner blogs\nand social media (https:\/\/twitter.com\/optmta), will begin with the first contacts in the course\nof the needs analysis and will accompany the entire project. We will maximise probability of\na broad uptake of the project results and the practice is maximised through the high\nquantity and quality of productive interactions with stakeholders (Wolf et al. 2013) and the\npublication of all developed software and documentation under open licences.<\/p>"
+        }
+    ]
+}
