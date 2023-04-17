@@ -55,7 +55,8 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                            placeholder="Token for saving"/>
                 </div>
                 <div class="col">
-                    <button class="btn btn-primary" v-on:click="saveDocument()">Save</button>
+                    <button class="btn btn-primary" v-on:click="saveToFile()">Save to server</button> &nbsp;
+                    <button class="btn btn-primary" v-on:click="saveToGitHub()">Save to GitHub Issue</button>
                 </div>
                 <div class="col-12">
                     <hr/>
@@ -73,7 +74,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                                     <label :for="key" class="form-label text-capitalize">{{ key }}</label>
                                 </div>
                                 <div class="col-9">
-                                    <input v-model.trim="currentDocument.metadata[key]" type="text"
+                                    <input v-model="currentDocument.metadata[key]" type="text"
                                            :disabled="!newDocument"
                                            :id="key" :name="key" :placeholder="key" class="form-control"/>
                                 </div>
@@ -192,7 +193,8 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                 currentDocument: getDocumentSchema(),
                 savedDocument: <?=$savedDocument?>,
                 selectedFieldIndex: '',
-                showPreview: {"raw": true, "html": false, "pdf": false, "dspace": false}
+                showPreview: {"raw": true, "html": false, "pdf": false, "dspace": false},
+                githubUrlIssues: '<?=GITHUB_URL_ISSUES?>'
             }
         },
         methods: {
@@ -213,19 +215,36 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                 documentField['value'] = '';
                 this.currentDocument.fields.push(documentField);
             },
-            saveDocument() {
+            saveToFile() {
                 if (confirm(this.defaultMessages.confirmSave)) {
-                    fetch(this.apiUrl, {
+                    fetch(this.apiUrl + '?action=saveToFile', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'AuthenticationToken': this.authenticationToken
+                            '<?=TOKEN_KEY?>': this.authenticationToken
                         },
                         body: JSON.stringify(this.currentDocument)
                     }).then(response => {
                         if (response.status === 200) {
                             this.newDocument = false;
                         }
+                    });
+                }
+            },
+            saveToGitHub() {
+                if (confirm(this.defaultMessages.confirmSave)) {
+                    fetch(this.apiUrl + '?action=saveToGitHub', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            '<?=TOKEN_KEY?>': this.authenticationToken
+                        },
+                        body: JSON.stringify(this.currentDocument)
+                    }).then(response => {
+                        return response.json();
+                    }).then(data => {
+                        this.currentDocument.metadata['github'] =
+                            this.githubUrlIssues + data['issueId'];
                     });
                 }
             },

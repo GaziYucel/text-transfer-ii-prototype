@@ -42,7 +42,8 @@ function getDocumentSchema()
         "metadata": {
             "name": "",
             "created": "",
-            "modified": ""
+            "modified": "",
+            "github": ""
         },
         "fields": []
     }
