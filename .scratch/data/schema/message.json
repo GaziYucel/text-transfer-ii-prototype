@@ -1,0 +1,14 @@
+{
+  "key": {
+    "type": "string",
+    "unique": true,
+    "label": "Key",
+    "enum": []
+  },
+  "message": {
+    "type": "string",
+    "unique": false,
+    "label": "Message",
+    "enum": []
+  }
+}

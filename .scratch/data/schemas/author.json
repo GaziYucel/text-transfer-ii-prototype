@@ -1,0 +1,26 @@
+{
+  "given_name": {
+    "type": "string",
+    "unique": false,
+    "label": "Given name",
+    "enum": []
+  },
+  "family_name": {
+    "type": "string",
+    "unique": false,
+    "label": "Family name",
+    "enum": []
+  },
+  "email": {
+    "type": "string",
+    "unique": true,
+    "label": "Email",
+    "enum": []
+  },
+  "institution": {
+    "type": "object",
+    "unique": false,
+    "label": "Institution",
+    "enum": []
+  }
+}
