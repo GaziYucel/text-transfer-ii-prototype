@@ -16,7 +16,7 @@ const DOCUMENT_URL_KEY = 'name';
 /**
  *  The key of the header value, which holds the token
  */
-const TOKEN_KEY = 'AuthenticationToken';
+const TOKEN_KEY = 'Authenticationtoken';
 
 /**
  *  HTTP Status Code Descriptions
@@ -32,6 +32,13 @@ const HTTP_STATUS_CODES = [
     500 => 'Internal Server Error',
     503 => 'Service Unavailable'
 ];
+
+const GITHUB_URL_ISSUES = 'https://github.com/TIBHannover/text-transfer-ii-prototype/issues/';
+
+/**
+ * GitHub api url where the file should be saved to
+ */
+const GITHUB_URL_API_ISSUES = 'https://api.github.com/repos/TIBHannover/text-transfer-ii-prototype/issues';
 
 /**
  * Create and require the config.secrets.php file.
@@ -53,3 +60,5 @@ define('GITHUB_TOKEN', '');
     file_put_contents('config.secrets.php', $data);
 }
 require_once('config.secrets.php');
+
+require_once('vendor/autoload.php');
