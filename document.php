@@ -178,7 +178,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
         data() {
             return {
                 apiUrl: 'api.php',
-                authenticationToken: 'N3gNewEDhIzmKB9p2EQA1ypJO0wmSVpK',
+                authenticationToken: '',
                 defaultMessages: getDefaultMessages(),
                 fields: getFields(),
                 fieldsHtml: getFieldsHtml(),
