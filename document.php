@@ -31,9 +31,6 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
 
     <script type="text/javascript" src="assets/js/script.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-
-    <script type="text/javascript" src="data/lists.js"></script>
-    <script type="text/javascript" src="data/schemas.js"></script>
 </head>
 <body>
 
@@ -150,8 +147,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                             </div>
                         </div>
                         <div id="showPreview.pdf" v-show="showPreview.pdf">
-                            <button class="btn btn-outline-primary" v-on:click="createPdf">Generate and download Pdf
-                            </button>
+                            <button class="btn btn-outline-primary" v-on:click="createPdf">Download Pdf</button>
                         </div>
                         <div id="showPreview.dspace" v-show="showPreview.dspace">
                             <pre>{{ previewDspace }}</pre>
@@ -256,34 +252,13 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                 const doc = new PDFDocument;
                 const stream = doc.pipe(blobStream());
 
-                // draw some text
-                doc.fontSize(25).text('Here is some vector graphics...', 100, 80);
-                // some vector graphics
-                doc.save()
-                    .moveTo(100, 150)
-                    .lineTo(100, 250)
-                    .lineTo(200, 250)
-                    .fill('#FF3300');
-                doc.circle(280, 200, 50).fill('#6600FF');
-                // an SVG path
-                doc.scale(0.6)
-                    .translate(470, 130)
-                    .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
-                    .fill('red', 'even-odd')
-                    .restore();
-                // and some justified text wrapped into columns
-                doc.text('And here is some wrapped text...', 100, 300)
-                    .font('Times-Roman', 13)
-                    .moveDown()
-                    .text('lorem', {
-                        width: 412,
-                        align: 'justify',
-                        indent: 30,
-                        columns: 2,
-                        height: 300,
-                        ellipsis: true
-                    });
-
+                this.currentDocument.fields.forEach( row => {
+                    let value = row['value'];
+                    value = value.replace('<br>', "\n").replace('<br/>', "\n");
+                    value = value.replace(/<\/?strong[^>]*>/g, ""); // remove <p></p>
+                    value = value.replace(/<\/?p[^>]*>/g, ""); // remove <p></p>
+                    doc.fontSize(14).text(value).moveDown();
+                });
                 doc.end();
 
                 stream.on('finish', function () {
@@ -354,6 +329,158 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
         console.log('VueJS-errorHandler instance: ' + instance);
         console.log('VueJS-errorHandler info: ' + info.toString());
     };
+
+    /* lists */
+
+    /**
+     * List of default messages for the app
+     * @returns {{key, text}}
+     */
+    function getDefaultMessages()
+    {
+        return {
+            "notImplemented": "This feature is not implemented yet.",
+            "confirmSave": "Are you sure you want to save?",
+            "confirmCancel": "Are you sure you want to cancel?",
+            "confirmDelete": "Are you sure you want to delete?",
+            "confirmInsert": "Are you sure you want to insert?"
+        }
+    }
+
+    /**
+     * List of fields in document according to Dublin Core
+     * @returns [{key, type, schema, definition}]
+     */
+    function getFields()
+    {
+        return [
+            { "key": "dc.body", "type": "richtext", "schema": "", "definition": "Main body of the resource" },
+            { "key": "dc.contributor.author", "type": "object", "schema": "author", "definition": "The author of the resource." },
+            { "key": "dc.date", "type": "date", "schema": "", "definition": "Use qualified form if possible." },
+            { "key": "dc.description.abstract", "type": "richtext", "schema": "", "definition": "Abstract or summary." },
+            { "key": "dc.identifier.doi", "type": "text", "schema": "", "definition": "Digital Object Identifier" },
+            { "key": "dc.publisher", "type": "text", "schema": "", "definition": "Entity responsible for publication, distribution, or imprint." },
+            { "key": "dc.references", "type": "multitext", "schema": "", "definition": "References " },
+            { "key": "dc.rights", "type": "text", "schema": "", "definition": "Terms governing use and reproduction." },
+            { "key": "dc.title", "type": "text", "schema": "", "definition": "Title of the resource" },
+            { "key": "dc.subtitle", "type": "text", "schema": "", "definition": "Subtitle of the resource" },
+        ];
+    }
+
+    /**
+     * List of fields and their corresponding HTML tag in document according to Dublin Core
+     * @returns [{key, tag}]
+     */
+    function getFieldsHtml()
+    {
+        return {
+            "dc.body": "",
+            "dc.contributor.author": "",
+            "dc.date": "",
+            "dc.description.abstract": "",
+            "dc.identifier.doi": "",
+            "dc.publisher": "",
+            "dc.references": "",
+            "dc.rights": "",
+            "dc.title": "h1",
+            "dc.subtitle": "h2"
+        };
+    }
+
+    /**
+     * List of ISO 639-1 codes
+     * @returns {{key, label}}
+     */
+    function getLanguages()
+    {
+        return {
+            "nl ": "Dutch",
+            "en ": "English",
+            "de": "German"
+        };
+    }
+
+    /**
+     * List of German institutions (source GWDG)
+     * @returns {{key, label}}
+     */
+    function getInstitutions()
+    {
+        return [
+            "Leibniz University Hannover",
+            "Leibniz-Institut für Deutsche Sprache (IDS)",
+            "Technische Informationsbibliothek (TIB)",
+            "University of Mannheim"
+        ];
+    }
+
+    /* schemas */
+
+    /**
+     * Author schema
+     * @returns {{
+     * given_name: {type: string, unique: boolean, label: string, enum: *[]},
+     * family_name: {type: string, unique: boolean, label: string, enum: *[]},
+     * email: {type: string, unique: boolean, label: string, enum: *[]},
+     * institution: {type: string, unique: boolean, label: string, enum: *[]} }}
+     */
+    function getAuthorSchema()
+    {
+        return {
+            "given_name": {"type": "string", "unique": false, "label": "Given name", "enum": []},
+            "family_name": {"type": "string", "unique": false, "label": "Family name", "enum": []},
+            "email": {"type": "string", "unique": true, "label": "Email", "enum": []},
+            "institution": {"type": "object", "unique": false, "label": "Institution", "enum": []}
+        };
+    }
+
+    /**
+     * Field schema
+     * @returns {{
+     * key: {unique: boolean, label: string, type: string, enum: *[]},
+     * type: {unique: boolean, label: string, type: string, enum: string[]},
+     * schema: {unique: boolean, label: string, type: string, enum: string[]},
+     * required: {unique: boolean, label: string, type: string, enum: *[]},
+     * definition: {unique: boolean, label: string, type: string, enum: *[]} }}
+     */
+    function getFieldSchema()
+    {
+        return {
+            "key": {"type": "string", "unique": true, "label": "Key", "enum": []},
+            "type": {"type": "string", "unique": false, "label": "Type", "enum": ["text", "object"]},
+            "schema": {"type": "string", "unique": false, "label": "Schema", "enum": ["object"]},
+            "required": {"type": "bool", "unique": false, "label": "Required", "enum": []},
+            "definition": {"type": "string", "unique": false, "label": "Definition", "enum": []}
+        };
+    }
+
+    function getDocumentSchema()
+    {
+        return {
+            "metadata": {
+                "name": "",
+                "created": "",
+                "modified": "",
+                "github": ""
+            },
+            "fields": []
+        }
+    }
+
+    /**
+     * Document item schema
+     * @returns {{schema: string, definition: string, type: string, value: string, key: string}}
+     */
+    function getDocumentFieldSchema()
+    {
+        return {
+            "key": "",
+            "type": "",
+            "schema": "",
+            "definition": "",
+            "value": ""
+        };
+    }
 
 </script>
 

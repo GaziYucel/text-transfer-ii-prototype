@@ -21,9 +21,6 @@
 
     <script type="text/javascript" src="assets/js/script.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-
-    <script type="text/javascript" src="data/lists.js"></script>
-    <script type="text/javascript" src="data/schemas.js"></script>
 </head>
 <body>
 
