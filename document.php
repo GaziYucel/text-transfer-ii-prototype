@@ -1,14 +1,4 @@
-<?php
-require_once('config.php');
-
-// if querystring ?document given, then check if document exists and return content
-$savedDocument = '{}';
-$savedDocumentPath = '';
-if (!empty($_GET[DOCUMENT_URL_KEY])) {
-    $savedDocumentPath = DOCUMENTS_DIR . '/' . $_GET[DOCUMENT_URL_KEY];
-}
-if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDocumentPath);
-?>
+<?php require_once('config.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,8 +42,8 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                            placeholder="Token for saving"/>
                 </div>
                 <div class="col">
-                    <button class="btn btn-primary" v-on:click="saveToFile()">Save to server</button> &nbsp;
-                    <button class="btn btn-primary" v-on:click="saveToGitHub()">Save to GitHub Issue</button>
+                    <button class="btn btn-primary" v-on:click="saveToFile()" :disabled="isAuthenticationTokenConfigured">Save to server</button> &nbsp;
+                    <button class="btn btn-primary" v-on:click="saveToGitHub()" :disabled="isGitHubTokenConfigured">Save to GitHub Issue</button>
                 </div>
                 <div class="col-12">
                     <hr/>
@@ -79,9 +69,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                             <!-- metadata -->
                             <!-- fields -->
                             <div class="form-group row" v-for="(item, index) in currentDocument.fields" :key="index">
-                                <label :for="item.key+'.'+index" class="form-label">{{ index }}. {{ item.definition }}
-                                    ({{
-                                        item.key }})</label>
+                                <label :for="item.key+'.'+index" class="form-label">{{ index }}. {{ item.definition }} ({{ item.key }})</label>
                                 <textarea v-if="item.type==='richtext'" v-model="item.value" type="text"
                                           :id="item.key+'.'+index" :name="item.key+'.'+index"
                                           :placeholder="item.definition"
@@ -98,10 +86,15 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                                        :id="item.key+'.'+index" :name="item.key+'.'+index"
                                        :placeholder="item.definition"
                                        class="form-control"/>
+                                <select v-else-if="item.type='select'" class="form-select" v-model="item.value">
+                                    <option value="" disabled selected hidden>Choose field</option>
+                                    <option v-for="(license) in licenses" :value="license" :key="license">{{ license }}</option>
+                                </select>
                                 <textarea v-else v-model="item.value" type="text"
                                           :id="item.key+'.'+index" :name="item.key+'.'+index"
                                           :placeholder="item.definition"
                                           class="form-control"></textarea>
+
                             </div>
                             <!-- fields -->
                             <!-- add field -->
@@ -109,9 +102,8 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                                 <div class="col-9">
                                     <select class="form-select" v-model="selectedFieldIndex">
                                         <option value="" disabled selected hidden>Choose field</option>
-                                        <option v-for="(field, index) in fields" :value="index" :key="index">{{ index }}
-                                            - {{
-                                                field.key }} - {{ field.definition }}
+                                        <option v-for="(field, index) in fields" :value="index" :key="index">
+                                            {{ index }} - {{ field.key }} - {{ field.definition }}
                                         </option>
                                     </select>
                                 </div>
@@ -128,10 +120,18 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                 <div class="col-6">
                     <div class="column-preview">
                         <div>
-                            <button class="btn btn-outline-secondary" :class="{ active: showPreview.raw}" v-on:click="switchPreview('raw')">Raw</button> &nbsp;
-                            <button class="btn btn-outline-secondary" :class="{ active: showPreview.html}" v-on:click="switchPreview('html')">Html</button> &nbsp;
-                            <button class="btn btn-outline-secondary" :class="{ active: showPreview.pdf}" v-on:click="switchPreview('pdf')">Pdf</button> &nbsp;
-                            <button class="btn btn-outline-secondary" :class="{ active: showPreview.dspace}" v-on:click="switchPreview('dspace')">DSpace</button>
+                            <button class="btn btn-outline-secondary" :class="{ active: showPreview.raw}"
+                                    v-on:click="switchPreview('raw')">Raw
+                            </button> &nbsp;
+                            <button class="btn btn-outline-secondary" :class="{ active: showPreview.html}"
+                                    v-on:click="switchPreview('html')">Html
+                            </button> &nbsp;
+                            <button class="btn btn-outline-secondary" :class="{ active: showPreview.pdf}"
+                                    v-on:click="switchPreview('pdf')">Pdf
+                            </button> &nbsp;
+                            <button class="btn btn-outline-secondary" :class="{ active: showPreview.dspace}"
+                                    v-on:click="switchPreview('dspace')">DSpace
+                            </button>
                         </div>
                         <hr/>
                         <div id="showPreview.raw" v-show="showPreview.raw">
@@ -183,14 +183,17 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                 fields: getFields(),
                 fieldsHtml: getFieldsHtml(),
                 institutions: getInstitutions(),
+                licenses: getLicenses(),
                 authorSchema: getAuthorSchema(),
                 documentFieldSchema: getDocumentFieldSchema(),
                 newDocument: true,
                 currentDocument: getDocumentSchema(),
-                savedDocument: <?=$savedDocument?>,
+                savedDocument: <?= (!empty($_GET[DOCUMENT_URL_KEY]) && file_exists(DOCUMENTS_DIR . '/' . $_GET[DOCUMENT_URL_KEY])) ? file_get_contents(DOCUMENTS_DIR . '/' . $_GET[DOCUMENT_URL_KEY]) : '{}'; ?>,
                 selectedFieldIndex: '',
                 showPreview: {"raw": true, "html": false, "pdf": false, "dspace": false},
-                githubUrlIssues: '<?=GITHUB_URL_ISSUES?>'
+                githubUrlIssues: '<?=GITHUB_URL_ISSUES?>',
+                isAuthenticationTokenConfigured: <?= (!empty(AUTHENTICATION_TOKEN)) ? 'false' : 'true'; ?>,
+                isGitHubTokenConfigured: <?= (!empty(AUTHENTICATION_TOKEN) && !empty(GITHUB_TOKEN)) ? 'false' : 'true'; ?>,
             }
         },
         methods: {
@@ -252,7 +255,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
                 const doc = new PDFDocument;
                 const stream = doc.pipe(blobStream());
 
-                this.currentDocument.fields.forEach( row => {
+                this.currentDocument.fields.forEach(row => {
                     let value = row['value'];
                     value = value.replace('<br>', "\n").replace('<br/>', "\n");
                     value = value.replace(/<\/?strong[^>]*>/g, ""); // remove <p></p>
@@ -267,20 +270,19 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
             }
         },
         computed: {
-            previewRaw(){
+            previewRaw() {
                 return JSON.stringify(this.currentDocument, null, 4);
             },
-            previewHtml(){
+            previewHtml() {
                 let preview = '';
-                this.currentDocument.fields.forEach( row => {
+                this.currentDocument.fields.forEach(row => {
                     let value = row['value'].replace(/[\r\n]{2}/g, "<br/><br/>\n");
-                    if(this.fieldsHtml[row['key']] !== ''){
+                    if (this.fieldsHtml[row['key']] !== '') {
                         preview +=
                             '<' + this.fieldsHtml[row['key']] + '>' +
                             value +
                             '</' + this.fieldsHtml[row['key']] + '>';
-                    }
-                    else{
+                    } else {
                         preview +=
                             '<p>' + value + '</p>';
                     }
@@ -290,15 +292,17 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
 
                 return preview;
             },
-            previewDspace(){
+            previewDspace() {
                 let preview = '';
                 preview += '<' + '?xml version="1.0" encoding="UTF-8"?>' + '\n';
                 preview += '  <dublin_core>' + '\n';
-                this.currentDocument.fields.forEach( row => {
+                this.currentDocument.fields.forEach(row => {
                     let parts = row['key'].split('.');
                     let element = parts[1];
                     let qualifier = '';
-                    if(parts.length >= 3){ qualifier = parts[2]; }
+                    if (parts.length >= 3) {
+                        qualifier = parts[2];
+                    }
 
                     let value = convertToSafeXmlText(row['value']);
 
@@ -336,8 +340,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
      * List of default messages for the app
      * @returns {{key, text}}
      */
-    function getDefaultMessages()
-    {
+    function getDefaultMessages() {
         return {
             "notImplemented": "This feature is not implemented yet.",
             "confirmSave": "Are you sure you want to save?",
@@ -351,19 +354,18 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
      * List of fields in document according to Dublin Core
      * @returns [{key, type, schema, definition}]
      */
-    function getFields()
-    {
+    function getFields() {
         return [
-            { "key": "dc.body", "type": "richtext", "schema": "", "definition": "Main body of the resource" },
-            { "key": "dc.contributor.author", "type": "object", "schema": "author", "definition": "The author of the resource." },
-            { "key": "dc.date", "type": "date", "schema": "", "definition": "Use qualified form if possible." },
-            { "key": "dc.description.abstract", "type": "richtext", "schema": "", "definition": "Abstract or summary." },
-            { "key": "dc.identifier.doi", "type": "text", "schema": "", "definition": "Digital Object Identifier" },
-            { "key": "dc.publisher", "type": "text", "schema": "", "definition": "Entity responsible for publication, distribution, or imprint." },
-            { "key": "dc.references", "type": "multitext", "schema": "", "definition": "References " },
-            { "key": "dc.rights", "type": "text", "schema": "", "definition": "Terms governing use and reproduction." },
-            { "key": "dc.title", "type": "text", "schema": "", "definition": "Title of the resource" },
-            { "key": "dc.subtitle", "type": "text", "schema": "", "definition": "Subtitle of the resource" },
+            {"key": "dc.body", "type": "richtext", "schema": "", "definition": "Main body of the resource"},
+            {"key": "dc.contributor.author", "type": "object", "schema": "author", "definition": "The author of the resource." },
+            {"key": "dc.date", "type": "date", "schema": "", "definition": "Use qualified form if possible."},
+            {"key": "dc.description.abstract", "type": "richtext", "schema": "", "definition": "Abstract or summary."},
+            {"key": "dc.identifier.doi", "type": "text", "schema": "", "definition": "Digital Object Identifier"},
+            {"key": "dc.publisher", "type": "text", "schema": "", "definition": "Publisher of resource." },
+            {"key": "dc.references", "type": "multitext", "schema": "", "definition": "References "},
+            {"key": "dc.rights", "type": "select", "schema": "license", "definition": "Terms governing use and reproduction."},
+            {"key": "dc.title", "type": "text", "schema": "", "definition": "Title of the resource"},
+            {"key": "dc.subtitle", "type": "text", "schema": "", "definition": "Subtitle of the resource"},
         ];
     }
 
@@ -371,8 +373,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
      * List of fields and their corresponding HTML tag in document according to Dublin Core
      * @returns [{key, tag}]
      */
-    function getFieldsHtml()
-    {
+    function getFieldsHtml() {
         return {
             "dc.body": "",
             "dc.contributor.author": "",
@@ -391,8 +392,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
      * List of ISO 639-1 codes
      * @returns {{key, label}}
      */
-    function getLanguages()
-    {
+    function getLanguages() {
         return {
             "nl ": "Dutch",
             "en ": "English",
@@ -404,13 +404,25 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
      * List of German institutions (source GWDG)
      * @returns {{key, label}}
      */
-    function getInstitutions()
-    {
+    function getInstitutions() {
         return [
             "Leibniz University Hannover",
             "Leibniz-Institut für Deutsche Sprache (IDS)",
             "Technische Informationsbibliothek (TIB)",
             "University of Mannheim"
+        ];
+    }
+
+    /**
+     * License types
+     * @returns {*}
+     */
+    function getLicenses() {
+        return [
+            "None",
+            "GNU General Public License",
+            "Creative Commons",
+            "MIT License"
         ];
     }
 
@@ -424,8 +436,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
      * email: {type: string, unique: boolean, label: string, enum: *[]},
      * institution: {type: string, unique: boolean, label: string, enum: *[]} }}
      */
-    function getAuthorSchema()
-    {
+    function getAuthorSchema() {
         return {
             "given_name": {"type": "string", "unique": false, "label": "Given name", "enum": []},
             "family_name": {"type": "string", "unique": false, "label": "Family name", "enum": []},
@@ -443,8 +454,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
      * required: {unique: boolean, label: string, type: string, enum: *[]},
      * definition: {unique: boolean, label: string, type: string, enum: *[]} }}
      */
-    function getFieldSchema()
-    {
+    function getFieldSchema() {
         return {
             "key": {"type": "string", "unique": true, "label": "Key", "enum": []},
             "type": {"type": "string", "unique": false, "label": "Type", "enum": ["text", "object"]},
@@ -454,8 +464,11 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
         };
     }
 
-    function getDocumentSchema()
-    {
+    /**
+     * Document schema
+     * @returns {{metadata: {github: string, created: string, name: string, modified: string}, fields: *[]}}
+     */
+    function getDocumentSchema() {
         return {
             "metadata": {
                 "name": "",
@@ -471,8 +484,7 @@ if (file_exists($savedDocumentPath)) $savedDocument = file_get_contents($savedDo
      * Document item schema
      * @returns {{schema: string, definition: string, type: string, value: string, key: string}}
      */
-    function getDocumentFieldSchema()
-    {
+    function getDocumentFieldSchema() {
         return {
             "key": "",
             "type": "",
