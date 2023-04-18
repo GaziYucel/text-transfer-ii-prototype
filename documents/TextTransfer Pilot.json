@@ -36,10 +36,10 @@
         },
         {
             "key": "dc.rights",
-            "type": "text",
+            "type": "select",
             "schema": "",
             "definition": "Terms governing use and reproduction.",
-            "value": ""
+            "value": "Creative Commons"
         },
         {
             "key": "dc.references",

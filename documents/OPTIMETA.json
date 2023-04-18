@@ -47,6 +47,13 @@
             "schema": "",
             "definition": "References ",
             "value": "Bj\u00f6rk BC, Shen C, Laakso M (2016) A longitudinal study of independent scholar-published open access journals. PeerJ 4 https:\/\/doi.org\/10.7717\/peerj.1990\n\nBrown J (2019) Crossref grant IDs: a global, open database of funding information and identifiers. Autumn 2019 euroCRIS Strategic Membership Meeting. Strategic Membership Meeting 2019 \u2013 Autumn, M\u00fcnster, Nov 18-20, 2019. euroCRIS, 33 pp. URL: http:\/\/hdl.handle.net\/11366\/1249\n\nBundesministerium f\u00fcr Bildung und Forschung (2020) Richtlinie zur F\u00f6rderung von Projektenzur Beschleunigung der Transformation zu Open Access. Bundesanzeiger, Bundesministerium der Justiz und f\u00fcr Verbraucherschutz. URL: https:\/\/www.bildung-forschung.digital\/files\/BAnz%20AT%2017.06.2020%20B3-1.pdf\n\nConlon M, et al. (2019) VIVO: a system for research discovery. The Journal of Open Source Software 4 (39). https:\/\/doi.org\/10.21105\/joss.01182\n"
+        },
+        {
+            "key": "dc.rights",
+            "type": "select",
+            "schema": "license",
+            "definition": "Terms governing use and reproduction.",
+            "value": "Creative Commons"
         }
     ]
 }
