@@ -42,8 +42,8 @@
                            placeholder="Token for saving"/>
                 </div>
                 <div class="col">
-                    <button class="btn btn-primary" v-on:click="saveToFile()" :disabled="isAuthenticationTokenConfigured">Save to server</button> &nbsp;
-                    <button class="btn btn-primary" v-on:click="saveToGitHub()" :disabled="isGitHubTokenConfigured">Save to GitHub Issue</button>
+                    <button class="btn btn-primary" v-on:click="saveToFile()" :disabled="(isAuthenticationTokenConfigured || !authenticationToken)">Save to server</button> &nbsp;
+                    <button class="btn btn-primary" v-on:click="saveToGitHub()" :disabled="(isGitHubTokenConfigured || !authenticationToken)">Save to GitHub Issue</button>
                 </div>
                 <div class="col-12">
                     <hr/>
