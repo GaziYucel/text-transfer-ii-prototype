@@ -4,9 +4,8 @@ use GuzzleHttp\Exception\GuzzleException;
 
 require_once('config.php');
 
-$isAuthorised = false;
-
 // check if authorised
+$isAuthorised = false;
 // Some servers change the capitalization, therefore this lower caps
 foreach(getallheaders() as $key => $value){
     if (strtolower($key) === strtolower(TOKEN_KEY)){
@@ -33,7 +32,7 @@ switch ($action) {
         saveToGitHub($documentA);
         break;
     default:
-        response(["Action '" . $action . "' not found"], 404);
+        response(["Action '$action' not found"], 404);
         break;
 }
 
