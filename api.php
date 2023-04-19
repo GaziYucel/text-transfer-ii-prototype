@@ -25,12 +25,15 @@ $documentA = json_decode($document, true);
 $action = 'saveToFile';
 if (!empty($_GET['action'])) $action = trim($_GET['action']);
 switch ($action) {
+    case 'saveToFile':
+        saveToFile($documentA);
+        response($documentA, 200);
+        break;
     case 'saveToGitHub':
         saveToGitHub($documentA);
         break;
     default:
-        saveToFile($documentA);
-        response($documentA, 200);
+        response(["Action '" . $action . "' not found"], 404);
         break;
 }
 
