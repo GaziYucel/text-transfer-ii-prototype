@@ -22,7 +22,7 @@ $document = file_get_contents('php://input');
 $documentA = json_decode($document, true);
 
 // get action from querystring and execute corresponding method
-$action = 'saveToFile';
+$action = '';
 if (!empty($_GET['action'])) $action = trim($_GET['action']);
 switch ($action) {
     case 'saveToFile':
