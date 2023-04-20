@@ -45,7 +45,7 @@ Currently the following features are working:
 
 ## Setup
 
-* Tested with PHP 8.1
+* Tested with PHP 8.0/8.1
 * Download zip file and copy to the webserver
 * After first run, config.secrets.php is created.
   - Fill in AUTHENTICATION_TOKEN: this is for saving files to the file system
