@@ -1,7 +1,17 @@
 <?php
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+/**
+ * @file config.php
+ *
+ * Copyright (c) 2023+ TIB Hannover
+ * Copyright (c) 2023+ Gazi Yucel
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @class
+ * @ingroup text-transfer-ii-prototype
+ *
+ * @brief Configuration constants
+ *
+ */
 
 /**
  * Location of the saved documents
@@ -49,12 +59,13 @@ if (!file_exists('config.secrets.php')) {
 /**
  * Password needed for saving to server
  */
-define('AUTHENTICATION_TOKEN', '');
+const AUTHENTICATION_TOKEN = '';
 
 /**
  * GitHub Token for saving to GitHub repositories
  */
-define('GITHUB_TOKEN', '');
+const GITHUB_TOKEN = '';
+
 ";
 
     file_put_contents('config.secrets.php', $data);
