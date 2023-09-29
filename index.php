@@ -31,7 +31,6 @@
     </div>
 </header>
 
-
 <main class="row">
     <div class="col-12">
 
