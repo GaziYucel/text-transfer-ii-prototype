@@ -54,7 +54,7 @@ Currently the following features are working:
 ## Authorisation
 
 There is a simple authorisation built in.
-The authorisation is a simple check for a token.
+The authorisation is a simple check for an token.
 The tokens can be found in the file "config.secrets.php".
 
 ## Demo
