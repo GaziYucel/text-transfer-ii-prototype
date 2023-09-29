@@ -42,8 +42,12 @@
                            placeholder="Token for saving"/>
                 </div>
                 <div class="col">
-                    <button class="btn btn-primary" v-on:click="saveToFile()" :disabled="(isAuthenticationTokenConfigured || !authenticationToken)">Save to server</button> &nbsp;
-                    <button class="btn btn-primary" v-on:click="saveToGitHub()" :disabled="(isGitHubTokenConfigured || !authenticationToken)">Save to GitHub Issue</button>
+                    <button class="btn btn-primary" v-on:click="saveToFile()"
+                            :disabled="(isAuthenticationTokenConfigured || !authenticationToken)">Save to server
+                    </button> &nbsp;
+                    <button class="btn btn-primary" v-on:click="saveToGitHub()"
+                            :disabled="(isGitHubTokenConfigured || !authenticationToken)">Save to GitHub Issue
+                    </button>
                 </div>
                 <div class="col-12">
                     <hr/>
@@ -69,7 +73,8 @@
                             <!-- metadata -->
                             <!-- fields -->
                             <div class="form-group row" v-for="(item, index) in currentDocument.fields" :key="index">
-                                <label :for="item.key+'.'+index" class="form-label">{{ index }}. {{ item.definition }} ({{ item.key }})</label>
+                                <label :for="item.key+'.'+index" class="form-label">{{ index }}. {{ item.definition }}
+                                    ({{ item.key }})</label>
                                 <textarea v-if="item.type==='richtext'" v-model="item.value" type="text"
                                           :id="item.key+'.'+index" :name="item.key+'.'+index"
                                           :placeholder="item.definition"
@@ -88,7 +93,9 @@
                                        class="form-control"/>
                                 <select v-else-if="item.type='select'" class="form-select" v-model="item.value">
                                     <option value="" disabled selected hidden>Choose field</option>
-                                    <option v-for="(license) in licenses" :value="license" :key="license">{{ license }}</option>
+                                    <option v-for="(license) in licenses" :value="license" :key="license">{{ license
+                                        }}
+                                    </option>
                                 </select>
                                 <textarea v-else v-model="item.value" type="text"
                                           :id="item.key+'.'+index" :name="item.key+'.'+index"
@@ -161,16 +168,6 @@
 
     </div>
 </main>
-
-<footer class="row">
-    <div class="col-12">
-        <hr/>
-        <a href="https://texttransfer.org/contact.html" target="_blank">Contact</a> |
-        <a href="https://texttransfer.org/en/privacy-policy.html" target="_blank">Privacy Policy</a> |
-        <a href="https://texttransfer.org/en/legal-notice.html" target="_blank">Legal Notice</a> |
-        <a href="https://github.com/TIBHannover/text-transfer-ii-prototype" target="_blank">Code (GitHub)</a>
-    </div>
-</footer>
 
 <script>
     const {createApp} = Vue;
@@ -338,6 +335,7 @@
 
     /**
      * List of default messages for the app
+     *
      * @returns {{key, text}}
      */
     function getDefaultMessages() {
@@ -352,18 +350,29 @@
 
     /**
      * List of fields in document according to Dublin Core
-     * @returns [{key, type, schema, definition}]
+     *
+     * @returns {key: string, type: string, schema: string, definition: string}
      */
     function getFields() {
         return [
             {"key": "dc.body", "type": "richtext", "schema": "", "definition": "Main body of the resource"},
-            {"key": "dc.contributor.author", "type": "object", "schema": "author", "definition": "The author of the resource." },
+            {
+                "key": "dc.contributor.author",
+                "type": "object",
+                "schema": "author",
+                "definition": "The author of the resource."
+            },
             {"key": "dc.date", "type": "date", "schema": "", "definition": "Use qualified form if possible."},
             {"key": "dc.description.abstract", "type": "richtext", "schema": "", "definition": "Abstract or summary."},
             {"key": "dc.identifier.doi", "type": "text", "schema": "", "definition": "Digital Object Identifier"},
-            {"key": "dc.publisher", "type": "text", "schema": "", "definition": "Publisher of resource." },
+            {"key": "dc.publisher", "type": "text", "schema": "", "definition": "Publisher of resource."},
             {"key": "dc.references", "type": "multitext", "schema": "", "definition": "References "},
-            {"key": "dc.rights", "type": "select", "schema": "license", "definition": "Terms governing use and reproduction."},
+            {
+                "key": "dc.rights",
+                "type": "select",
+                "schema": "license",
+                "definition": "Terms governing use and reproduction."
+            },
             {"key": "dc.title", "type": "text", "schema": "", "definition": "Title of the resource"},
             {"key": "dc.subtitle", "type": "text", "schema": "", "definition": "Subtitle of the resource"},
         ];
@@ -371,7 +380,8 @@
 
     /**
      * List of fields and their corresponding HTML tag in document according to Dublin Core
-     * @returns [{key, tag}]
+     *
+     * @returns {{key, tag}}
      */
     function getFieldsHtml() {
         return {
@@ -495,6 +505,16 @@
     }
 
 </script>
+
+<footer class="row">
+    <div class="col-12">
+        <hr/>
+        <a href="https://texttransfer.org/contact.html" target="_blank">Contact</a> |
+        <a href="https://texttransfer.org/en/privacy-policy.html" target="_blank">Privacy Policy</a> |
+        <a href="https://texttransfer.org/en/legal-notice.html" target="_blank">Legal Notice</a> |
+        <a href="https://github.com/TIBHannover/text-transfer-ii-prototype" target="_blank">Code (GitHub)</a>
+    </div>
+</footer>
 
 </body>
 </html>
