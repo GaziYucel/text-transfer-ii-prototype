@@ -59,6 +59,6 @@ The tokens can be found in the file "config.secrets.php".
 
 ## Demo
 
-You can find a working demo at this address: https://labs.someserver.eu/text-transfer-ii-prototype/
+You can find a working demo at this address: https://proposalpilot.texttransfer.org/
 
 For security reasons, saving is disabled. 
